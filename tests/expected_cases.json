@@ -1,0 +1,293 @@
+[
+  {
+    "name": "dsu boundary: empty, self-union, duplicate unions",
+    "justification": "Self-union [0,0] keeps 3 components; [0,1] merges into 2 components (max 2); duplicate [1,0] does not alter state.",
+    "input": {
+      "task": "dsu",
+      "n": 3,
+      "operations": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    "output": {
+      "states": [
+        [
+          3,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ]
+    }
+  },
+  {
+    "name": "kruskal 64-bit negative and positive weights with loops and isolates",
+    "justification": "Self-loop [0,0,-500000000] is ignored; parallel edge [0,1,-1000000000] is chosen over [0,1,10]; vertex 3 is isolated (2 components).",
+    "input": {
+      "task": "kruskal",
+      "n": 4,
+      "edges": [
+        [
+          0,
+          0,
+          -500000000
+        ],
+        [
+          0,
+          1,
+          10
+        ],
+        [
+          0,
+          1,
+          -1000000000
+        ],
+        [
+          1,
+          2,
+          -1000000000
+        ]
+      ]
+    },
+    "output": {
+      "cost": -2000000000,
+      "edge_ids": [
+        2,
+        3
+      ],
+      "components": 2
+    }
+  },
+  {
+    "name": "prim 64-bit negative and positive weights with loops and isolates",
+    "justification": "Same graph solved by Prim restarting across components; total cost is -2000000000 with 2 components.",
+    "input": {
+      "task": "prim",
+      "n": 4,
+      "edges": [
+        [
+          0,
+          0,
+          -500000000
+        ],
+        [
+          0,
+          1,
+          10
+        ],
+        [
+          0,
+          1,
+          -1000000000
+        ],
+        [
+          1,
+          2,
+          -1000000000
+        ]
+      ]
+    },
+    "output": {
+      "cost": -2000000000,
+      "edge_ids": [
+        2,
+        3
+      ],
+      "components": 2
+    }
+  },
+  {
+    "name": "scc multiple cycles, parallel cross-edges, and isolated vertex",
+    "justification": "{0,1} and {2,3} form two SCCs with parallel cross-edges (0->2, 1->3) deduplicated into one condensation edge; vertex 4 is isolated.",
+    "input": {
+      "task": "scc",
+      "n": 5,
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ]
+      ]
+    },
+    "output": {
+      "component": [
+        0,
+        0,
+        1,
+        1,
+        2
+      ],
+      "condensation": [
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  },
+  {
+    "name": "topo diamond DAG with isolated vertex",
+    "justification": "0 precedes 1 and 2, which both precede 3; vertex 4 is independent. Graph is acyclic.",
+    "input": {
+      "task": "topo",
+      "n": 5,
+      "edges": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ]
+    },
+    "output": {
+      "acyclic": true,
+      "order": [
+        4,
+        0,
+        2,
+        1,
+        3
+      ]
+    }
+  },
+  {
+    "name": "dag cycle unreachable from source",
+    "justification": "Source 0 only reaches 1, while 2<->3 forms a disconnected directed cycle. Whole-graph check must return acyclic=False.",
+    "input": {
+      "task": "dag",
+      "n": 4,
+      "source": 0,
+      "edges": [
+        [
+          0,
+          1,
+          5
+        ],
+        [
+          2,
+          3,
+          1
+        ],
+        [
+          3,
+          2,
+          1
+        ]
+      ]
+    },
+    "output": {
+      "acyclic": false,
+      "distance": [],
+      "parent_edge": []
+    }
+  },
+  {
+    "name": "dag tied shortest paths, parallel edges, and unreachable vertex",
+    "justification": "Edges 0 and 1 are parallel [0,1,5]; path 0->1->3 has weight 5+(-3)=2, tying 0->2->3 (1+1=2). Vertex 4 is unreachable (null).",
+    "input": {
+      "task": "dag",
+      "n": 5,
+      "source": 0,
+      "edges": [
+        [
+          0,
+          1,
+          5
+        ],
+        [
+          0,
+          1,
+          5
+        ],
+        [
+          0,
+          2,
+          1
+        ],
+        [
+          1,
+          3,
+          -3
+        ],
+        [
+          2,
+          3,
+          1
+        ]
+      ]
+    },
+    "output": {
+      "acyclic": true,
+      "distance": [
+        0,
+        5,
+        1,
+        2,
+        null
+      ],
+      "parent_edge": [
+        -1,
+        0,
+        2,
+        3,
+        -1
+      ]
+    }
+  }
+]
